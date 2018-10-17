@@ -293,7 +293,7 @@ class Consumer(base.Consumer):
                 transport.url, transport.default_port),
             partition_assignment_strategy=[self._assignor],
             enable_auto_commit=False,
-            auto_offset_reset='earliest',
+            auto_offset_reset='latest',
             max_poll_records=None,
             max_partition_fetch_bytes=1048576 * 4,
             fetch_max_wait_ms=1500,
@@ -314,7 +314,7 @@ class Consumer(base.Consumer):
             bootstrap_servers=server_list(
                 transport.url, transport.default_port),
             enable_auto_commit=True,
-            auto_offset_reset='earliest',
+            auto_offset_reset='latest',
             check_crcs=app.conf.broker_check_crcs,
             security_protocol="SSL" if app.conf.ssl_context else "PLAINTEXT",
             ssl_context=app.conf.ssl_context,
