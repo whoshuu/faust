@@ -366,6 +366,11 @@ class Consumer(base.Consumer):
         active_partitions = self._get_active_partitions()
         _next = next
 
+        tailed_partitions = {ap for ap in active_partitions
+                if ap.topic in self.transport.app._tailed_topics}
+        if tailed_partitions:
+            await _consumer.seek_to_end(*tailed_partitions)
+
         records: RecordMap = {}
         # This lock is acquired by pause_partitions/resume_partitions,
         # but those should never be called when the Fetcher is running.

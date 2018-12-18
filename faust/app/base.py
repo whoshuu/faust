@@ -289,6 +289,7 @@ class App(AppT, ServiceProxy, ServiceCallbacks):
         self.fixups = self._init_fixups()
 
         self.loop = loop
+        self._tailed_topics = set()
 
         # init the service proxy required to ensure of lazy loading
         # of the service class (see faust/app/service.py).
@@ -519,6 +520,7 @@ class App(AppT, ServiceProxy, ServiceCallbacks):
               *,
               name: str = None,
               concurrency: int = 1,
+              latest: bool = False,
               supervisor_strategy: Type[SupervisorStrategyT] = None,
               sink: Iterable[SinkT] = None,
               isolated_partitions: bool = False,
@@ -558,6 +560,8 @@ class App(AppT, ServiceProxy, ServiceCallbacks):
                 help=fun.__doc__,
                 **kwargs)
             self.agents[agent.name] = agent
+            if latest:
+                self._tailed_topics.add(name)
             venusian.attach(agent, category=SCAN_AGENT)
             return agent
 
